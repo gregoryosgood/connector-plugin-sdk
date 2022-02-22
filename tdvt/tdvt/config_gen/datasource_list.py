@@ -366,9 +366,9 @@ class TestRegistry(object):
         # Read all the datasource ini files and load the test configuration.
         registry_ini_file = get_ini_path_local_first('config/registry', ini_file)
         ds_list = self.get_datasources(self.get_ds_list(ds))
-        print(ds_list)
         suite_names = self.get_suite_names(registry_ini_file)
 
+        # Add the datasources included in suite if an argument is a suite.
         for d in ds_list:
             if d in suite_names:
                 ds_list.remove(d)
@@ -377,15 +377,13 @@ class TestRegistry(object):
                     if item not in ds_list:
                         ds_list.append(item)
 
+        # Create a new list which will only include files associated with our datasources.
         ini_files = get_all_ini_files_local_first('config')
         updated_ini_list = []
         for f in ini_files:
             for item in ds_list:
                 if os.path.basename(f).replace(".ini","") == item:
                     updated_ini_list.append(f)
-                    print(f)
-
-        print(updated_ini_list)
 
         for f in updated_ini_list:
             logging.debug("Reading ini file [{}]".format(f))
