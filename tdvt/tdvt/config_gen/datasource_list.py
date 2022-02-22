@@ -7,6 +7,7 @@ import configparser
 import glob
 import os.path
 import logging
+from pathlib import Path
 
 from .gentests import list_configs, list_config
 from ..resources import *
@@ -365,6 +366,7 @@ class TestRegistry(object):
         # Read all the datasource ini files and load the test configuration.
         registry_ini_file = get_ini_path_local_first('config/registry', ini_file)
         ds_list = self.get_datasources(self.get_ds_list(ds))
+        print(ds_list)
         suite_names = self.get_suite_names(registry_ini_file)
 
         for d in ds_list:
@@ -376,11 +378,16 @@ class TestRegistry(object):
                         ds_list.append(item)
 
         ini_files = get_all_ini_files_local_first('config')
+        updated_ini_list = []
         for f in ini_files:
-            if f.replace(".ini",",") not in ds_list:
-                ini_files.remove(f)
+            for item in ds_list:
+                if os.path.basename(f).replace(".ini","") == item:
+                    updated_ini_list.append(f)
+                    print(f)
 
-        for f in ini_files:
+        print(updated_ini_list)
+
+        for f in updated_ini_list:
             logging.debug("Reading ini file [{}]".format(f))
             config = configparser.ConfigParser()
             # Preserve the case of elements.
