@@ -380,12 +380,14 @@ class TestRegistry(object):
         # Create a new list which will only include files associated with our datasources.
         ini_files = get_all_ini_files_local_first('config')
         updated_ini_list = []
-        for f in ini_files:
-            for item in ds_list:
+        for item in ds_list:
+            print(item)
+            for f in ini_files:
                 if os.path.basename(f).replace(".ini","") == item:
                     updated_ini_list.append(f)
 
         for f in updated_ini_list:
+            print(f)
             logging.debug("Reading ini file [{}]".format(f))
             config = configparser.ConfigParser()
             # Preserve the case of elements.
